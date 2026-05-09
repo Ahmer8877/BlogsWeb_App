@@ -1,9 +1,10 @@
 import 'package:blog_with_ai_chatbot/WIDGETS/homeScreen_widget/homeScreen_widget.dart';
+import 'package:blog_with_ai_chatbot/data/Providers/auth_providers/auth_providers.dart';
 import 'package:blog_with_ai_chatbot/data/model/Blog_mddel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,90 +15,223 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  FirebaseFirestore db=FirebaseFirestore.instance;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+
+    // Responsive columns
+    int crossAxisCount = 1;
+
+    if(width > 1400){
+      crossAxisCount = 4;
+    }
+    else if(width > 1100){
+      crossAxisCount = 3;
+    }
+    else if(width > 700){
+      crossAxisCount = 2;
+    }
+
     return Scaffold(
+
       backgroundColor: const Color(0xFFF4ECE6),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: Column(
-          children: [
-            // 🔝 TOP BAR
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: const [
-                    Icon(Icons.auto_awesome, color: Colors.greenAccent),
-                    SizedBox(width: 8),
-                    Text(
-                      "MirBlogs",
-                      style: TextStyle(
+
+      //Floating action button
+
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            context.go('/AiChatBot');
+          },child:Icon(Icons.message_outlined)
+      ),
+      
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30,
+            vertical: 20,
+          ),
+
+          child: Column(
+            children: [
+
+              //TOP BAR
+              Row(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
+
+                children: [
+
+                  // LOGO
+                  Row(
+                    children: const [
+
+                      Icon(
+                        Icons.auto_awesome,
                         color: Colors.greenAccent,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ],
-                ),
 
-                OutlinedButton(
-                  onPressed: () {
-                    context.goNamed('addBlog');
-                  },
-                  child: const Text(
-                    "+ Write Post",
+                      SizedBox(width: 8),
+
+                      Text(
+                        "Mir_Blogs",
+
+                        style: TextStyle(
+                          color: Colors.greenAccent,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
 
-            const SizedBox(height: 30),
+                  Spacer(),
 
-            // 🔥 TITLE
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Latest Articles",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+
+                      children: [
+
+                        // MY BLOGS button
+                        ElevatedButton(
+                          onPressed: () {
+                            context.goNamed('myBlog');
+                          },
+
+                          child: const Text(
+                            "My Blogs",
+                          ),
+                        ),
+
+                        // ADD BLOG button
+                        ElevatedButton(
+                          onPressed: () {
+                            context.goNamed('addBlog');
+                          },
+
+                          child: const Text(
+                            "+ Write Post",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuButton(
+                      itemBuilder: (context)=>[
+
+                        //logOut Button
+                        PopupMenuItem(
+                            child: TextButton.icon(
+                                onPressed: (){
+                                  Provider.of<AuthProviders>(context,listen: false).logOut(context);
+                                },
+                                label: Text('SignOut'),
+                                icon: Icon(Icons.logout)
+                            )
+                        ),
+                        //contact us button
+                        PopupMenuItem(
+                          onTap: (){},
+                            child: Row(children: [Icon(Icons.call),Text('Contact Us')],)
+                        )
+                      ]
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 35),
+
+              // TITLE
+              const Align(
+                alignment: Alignment.centerLeft,
+
+                child: Text(
+                  "Latest Articles",
+
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
-            // 🔥 STREAM BUILDER GRID
-            Expanded(
-              child: StreamBuilder(
-                stream:db.collection('Blogs').where('status',isEqualTo: 'approved').snapshots(),
+              // BLOGS
+              Flexible(
+                child: StreamBuilder<QuerySnapshot>(
 
-                builder: (context, snapshot){
+                  stream: db.collection('Blogs').where(
+                    'status',
+                    isEqualTo: 'approved',
+                  )
+                      .orderBy(
+                    'createAt',
+                    descending: true,
+                  )
+                      .snapshots(),
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                  builder: (context, snapshot) {
 
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        "No Blogs Found",
-                      ));
-                  }
+                    // LOADING
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return const Center(child: CircularProgressIndicator(),
+                      );
+                    }
 
-                  List<BlogModel>? blogs=snapshot.data?.docs.map((e)=>BlogModel.fromMap(e.data())).toList();
-                  return ListView(
-                    children: blogs!.map((e){
-                      return BlogCard(blog: e,);
-                    }).toList(),
-                  );
-                },
+                    // EMPTY
+                    if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+
+                      return const Center(
+                        child: Text(
+                          "No Blogs Found",
+
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      );
+                    }
+
+                    // DATA
+                    final blogs = snapshot.data!.docs
+                        .map((e) => BlogModel.fromMap(
+                      e.data() as Map<String,dynamic>,
+                    ))
+                        .toList();
+
+                    return GridView.builder(
+
+                      itemCount: blogs.length,
+
+                      gridDelegate:
+                      SliverGridDelegateWithFixedCrossAxisCount(
+
+                        crossAxisCount: crossAxisCount,
+
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+
+                        childAspectRatio: 1.1,
+                      ),
+
+                      itemBuilder: (context, index) {
+
+                        return BlogCard(
+                          blog: blogs[index],
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

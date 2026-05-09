@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 final scaffoldMessengerKey=GlobalKey<ScaffoldMessengerState>();
+final navigatorKey=GlobalKey<NavigatorState>();
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

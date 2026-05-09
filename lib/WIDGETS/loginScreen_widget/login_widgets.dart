@@ -82,6 +82,8 @@ Widget loginForm(BuildContext context) {
                   onPressed: () {
                     if(formKey.currentState!.validate()){
                       provider.loginFunction(email.text.trim(), password.text.trim(), context);
+                      email.clear();
+                      password.clear();
                     }
 
                     },

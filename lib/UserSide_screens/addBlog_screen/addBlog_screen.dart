@@ -15,6 +15,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   final title = TextEditingController();
   final des = TextEditingController();
   final author = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +64,12 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       const SizedBox(height: 30),
 
                       // author FIELD
-                      inputFieldForAddBlog(
-                        controller: author,
-                        hint: "Type Author Name",
+                      Form(
+                        key: formKey,
+                        child: inputFieldForAddBlog(
+                          controller: author,
+                          hint: "Type Author Name",
+                        ),
                       ),
 
                       // 🔥 TITLE FIELD
@@ -83,7 +87,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.white24),
                         ),
-                        child: TextField(
+                        child: TextFormField(
                           controller: des,
                           maxLines: 80,
                           decoration: const InputDecoration(
@@ -98,23 +102,31 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       // 🔥 BUTTON
                       Align(
                         alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            side: const BorderSide(color: Colors.white24),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 14),
-                          ),
-                          onPressed: () {
-                            Provider.of<AuthProviders>(context, listen: false).addBlog(
-                              title: title.text,
-                              description: des.text,
-                              context: context,
+                        child: Consumer<AuthProviders>(
+                          builder: (context,provider,child) {
+                            return provider.isLoading? Center(child: CircularProgressIndicator(),): ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                side: const BorderSide(color: Colors.white24),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 14),
+                              ),
+                              onPressed: () {
+                                if(formKey.currentState!.validate()){
+                                  provider.addBlog(
+                                    title: title.text,
+                                    description: des.text,
+                                    context: context,
+                                    author: author.text,
+                                  );
+                                }
+
+                              },
+                              child: const Text(
+                                "Publish Blog →",
+                              ),
                             );
-                          },
-                          child: const Text(
-                            "Publish Blog →",
-                          ),
+                          }
                         ),
                       )
                     ],

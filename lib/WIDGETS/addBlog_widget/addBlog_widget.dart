@@ -6,7 +6,7 @@ Widget inputFieldForAddBlog({
   required String hint,
 }) {
   return Card(
-    child: TextField(
+    child: TextFormField(
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,

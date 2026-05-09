@@ -56,11 +56,6 @@ class leftContent extends StatelessWidget {
                 },
                 child: const Text("Get Started", style: TextStyle(color: Colors.black)),
               ),
-              const SizedBox(width: 10),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text("Admin Panel"),
-              ),
             ],
           ),
         ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../WIDGETS/forgetScreen_widget/forgetScreen_widget.dart';
-import '../../../WIDGETS/loginScreen_widget/login_widgets.dart' hide rightImage;
 
 class ForgetScreen extends StatelessWidget {
   const ForgetScreen({super.key});
@@ -13,31 +11,45 @@ class ForgetScreen extends StatelessWidget {
     return  Scaffold(
       backgroundColor: const Color(0xFFF4ECE6),
       //app bar
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF4ECE6),
-      ),
-
       body: LayoutBuilder(
         builder: (context, constraints) {
+
           bool isMobile = constraints.maxWidth < 900;
 
           return Center(
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 1200),
+
+              constraints: const BoxConstraints(
+                maxWidth: 1200,
+              ),
+
               child: isMobile
+
                   ? SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+
                 child: Column(
-                  children: [
-                    loginForm(context),
-                    const SizedBox(height: 30),
-                    rightImage(),
+                  children: const [
+
+                    ForgetForm(),
+
+                    SizedBox(height: 30),
+
+                    RightImage(),
                   ],
                 ),
               )
+
                   : Row(
-                children: [
-                  Expanded(child: forgetForm(context)),
-                  Expanded(child: rightImage()),
+                children: const [
+
+                  Expanded(
+                    child: ForgetForm(),
+                  ),
+
+                  Expanded(
+                    child: RightImage(),
+                  ),
                 ],
               ),
             ),

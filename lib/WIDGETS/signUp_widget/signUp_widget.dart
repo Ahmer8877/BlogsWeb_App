@@ -78,6 +78,9 @@ Widget form(BuildContext context) {
                   onPressed: () {
                     if(formKey.currentState!.validate()){
                       provider.signUpFunction(name.text.trim(), email.text.trim(), password.text.trim(),context);
+                      name.clear();
+                      email.clear();
+                      password.clear();
                     }
                   },
                   child: const Text(

@@ -1,7 +1,6 @@
-import 'package:blog_with_ai_chatbot/UserSide_screens/home_screen/home_screen.dart';
+import 'package:blog_with_ai_chatbot/UserSide_screens/Main_Screen/Main_Screen.dart';
 import 'package:blog_with_ai_chatbot/data/model/Blog_mddel.dart';
 import 'package:blog_with_ai_chatbot/data/model/user_model.dart';
-import 'package:blog_with_ai_chatbot/main.dart';
 import 'package:blog_with_ai_chatbot/utils/showMsg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,13 +19,17 @@ void signUpFunction(String name,String email,String password,BuildContext contex
 
   try{
     isLoading=true;
-    notifyListeners();
+    safeNotify();
     final result=await auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
-    UserModel user=UserModel(result.user?.uid, name, email);
+    UserModel user=UserModel(result.user?.uid, name, email,password);
 
     await db.collection('BlogUsers').doc(result.user?.uid).set(user.toMap());
     if(context.mounted){
-      context.go('/login');
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        context.go('/login');
+
+      });
+
     }
     showSuccessMsg('Register Successful,login now');
 
@@ -37,7 +40,7 @@ void signUpFunction(String name,String email,String password,BuildContext contex
     showFailureMsg(e.toString());
   }finally{
     isLoading=false;
-    notifyListeners();
+    safeNotify();
   }
 }
 
@@ -47,12 +50,14 @@ void loginFunction(String email,String password,BuildContext context)async{
 
   try{
     isLoading=true;
-    notifyListeners();
+    safeNotify();
     await auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
 
     if(context.mounted){
-      context.go('/home');
-    }
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        context.go('/home');
+
+      });    }
     showSuccessMsg('Login Successful');
 
   }on FirebaseAuthException catch(f){
@@ -62,30 +67,53 @@ void loginFunction(String email,String password,BuildContext context)async{
     showFailureMsg(e.toString());
   }finally{
     isLoading=false;
-    notifyListeners();
+    safeNotify();
   }
 }
 
 //logOut function
 
-Future<void> logOut()async{
+Future<void> logOut(BuildContext context)async{
 
   await auth.signOut();
-  Navigator.pushAndRemoveUntil(scaffoldMessengerKey.currentContext!,
-      MaterialPageRoute(builder: (_)=>HomeScreen()), (value)=>false
-  );
+  if(context.mounted){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>MainScreen()), (value)=>false);
+  }
 }
+
+//forget pasword function
+
+  Future<void> forget(String email)async{
+
+  try{
+    isLoading=true;
+    safeNotify();
+
+    await auth.sendPasswordResetEmail(email: email.trim());
+
+    showSuccessMsg('Check your email Now');
+
+  }on FirebaseAuthException catch(f){
+    showFailureMsg(f.toString());
+  }catch(e){
+    showFailureMsg(e.toString());
+  }finally{
+    isLoading=false;
+    safeNotify();
+  }
+  }
 
 //add blog provider
 
   Future<void> addBlog({
     required String title,
     required String description,
+    required String author,
     required BuildContext context,
   }) async {
 
-    if (title.trim().isEmpty || description.trim().isEmpty) {
-      showFailureMsg("Title and Description required");
+    if (title.trim().isEmpty || description.trim().isEmpty || author.trim().isEmpty) {
+      showFailureMsg("Title, Author and Description required");
       return;
     }
 
@@ -101,25 +129,29 @@ Future<void> logOut()async{
 
     try {
       isLoading = true;
-      notifyListeners();
+      safeNotify();
 
       final blog = BlogModel(
         id,
         user.uid,
         title.trim(),
         description.trim(),
-        'approved',
+        'pending',
         now,
+        author.trim()
       );
 
       await db.collection('Blogs').doc(id).set(blog.toMap());
 
-      // ✅ Success message
-      showSuccessMsg("Blog Published Successfully");
+      //  Success message
+      showSuccessMsg("Saved To MyBlog => Wait to Admin Confirmation");
 
-      // ✅ Screen close
+      //  Screen close
       if (context.mounted) {
-        Navigator.pop(context);
+        WidgetsBinding.instance.addPostFrameCallback((_){
+          Navigator.pop(context);
+
+        });
       }
 
     } on FirebaseException catch (e) {
@@ -130,7 +162,15 @@ Future<void> logOut()async{
 
     } finally {
       isLoading = false;
-      notifyListeners();
+      safeNotify();
     }
+  }
+
+  //safe notifier func
+
+  void safeNotify() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 }

@@ -73,8 +73,7 @@ class _MainScreenState extends State<MainScreen> {
 
                   //caution text
 
-                  Center(child: Text(' CAUTION: If you are new user or read Blogs to click GET STARTED\n         '
-                                                     'otherwise not click to ADMIN-PANEL')
+                  Center(child: Text(' CAUTION: If you are new user or read Blogs to click GET STARTED')
                   ),
                 ],
               ),

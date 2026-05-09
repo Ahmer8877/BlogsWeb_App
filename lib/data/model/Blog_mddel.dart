@@ -1,9 +1,9 @@
 class BlogModel {
 
-  String id ,userId,title,des,status;
+  String id ,userId,title,des,status,author;
   DateTime createAt;
 
-  BlogModel(this.id,this.userId,this.title,this.des,this.status,this.createAt);
+  BlogModel(this.id,this.userId,this.title,this.des,this.status,this.createAt,this.author);
 
   factory BlogModel.fromMap(map)=> BlogModel(
       map['id'],
@@ -11,7 +11,8 @@ class BlogModel {
       map['title'],
       map['des'],
       map['status'],
-      DateTime.parse(map['createAt'])
+      DateTime.parse(map['createAt']),
+      map['author'] ?? 'Unknown author'
   );
 
   Map<String,dynamic> toMap()=>{
@@ -21,6 +22,7 @@ class BlogModel {
     'title':title,
     'des':des,
     'status':status,
-    'createAt': createAt.toString()
+    'createAt': createAt.toString(),
+    'author': author
   };
 }
