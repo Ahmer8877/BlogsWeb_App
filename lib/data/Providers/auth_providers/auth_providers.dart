@@ -4,13 +4,16 @@ import 'package:blog_with_ai_chatbot/data/model/user_model.dart';
 import 'package:blog_with_ai_chatbot/utils/showMsg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProviders with ChangeNotifier{
 
 FirebaseAuth auth=FirebaseAuth.instance;
 FirebaseFirestore db=FirebaseFirestore.instance;
+GoogleSignIn googleSignIn=GoogleSignIn.instance;
 bool isLoading=false;
 
 //signUp function
@@ -161,6 +164,76 @@ Future<void> logOut(BuildContext context)async{
       showFailureMsg("Something went wrong");
 
     } finally {
+      isLoading = false;
+      safeNotify();
+    }
+  }
+
+  //google sign In function
+
+  Future<void> googleSignInFunction(BuildContext context) async {
+
+
+    try {
+
+      isLoading = true;
+      safeNotify();
+
+      // WEB
+      if (kIsWeb) {
+
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+        await auth.signInWithPopup(googleProvider);
+
+      }
+
+      // ANDROID / IOS
+      else {
+
+        final GoogleSignInAccount googleUser =
+        await googleSignIn.authenticate();
+
+        final GoogleSignInAuthentication googleAuth =
+            googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+
+        await auth.signInWithCredential(credential);
+      }
+
+      // SUCCESS
+
+      if (context.mounted) {
+        context.go('/home');
+      }
+
+      showSuccessMsg("Google Sign In Successful");
+
+    }
+
+    // FIREBASE ERROR
+
+    on FirebaseAuthException catch (e) {
+
+      showFailureMsg(
+        e.message ?? "Authentication Failed",
+      );
+    }
+
+    // OTHER ERROR
+
+    catch (e) {
+
+      showFailureMsg(e.toString());
+    }
+
+    //  FINALLY
+
+    finally {
+
       isLoading = false;
       safeNotify();
     }

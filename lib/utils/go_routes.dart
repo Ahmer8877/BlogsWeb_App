@@ -1,4 +1,4 @@
-import 'package:blog_with_ai_chatbot/AiChatBot/Home_Screen/HomeScreen.dart';
+import 'package:blog_with_ai_chatbot/AiChatBot/Home_Screen/AiHomeScreen.dart';
 import 'package:blog_with_ai_chatbot/UserSide_screens/Auth_Screens/Login_Screen/Login_screen.dart';
 import 'package:blog_with_ai_chatbot/UserSide_screens/Auth_Screens/SignUp_Screen/SignUp_Screen.dart';
 import 'package:blog_with_ai_chatbot/UserSide_screens/Auth_Screens/forget_Screen/forget_screen.dart';
@@ -14,6 +14,7 @@ class GoRoutes {
 
  static GoRouter routes() => GoRouter(
       routes: [
+        //splash screen route
         GoRoute(path: '/',builder: (context,state)=> SplashScreen()
         ),
         GoRoute(path: '/main',builder: (context,state)=> MainScreen()),
@@ -27,7 +28,7 @@ class GoRoutes {
             routes: [
               GoRoute(path: '/addBlog',name: 'addBlog',builder: (context,state)=> AddBlogScreen()),
               GoRoute(path: '/myBlog',name: 'myBlog',builder: (context,state)=> MyBlogsScreen()),
-              GoRoute(path: '/AiChatBot',name: 'AiChatBot',builder: (context,state)=> Ai_Homescreen()),
+              GoRoute(path: '/aiChatBot',name: 'aiChatBot',builder: (context,state)=> AiHomeScreen()),
             ]
         ),
       ],

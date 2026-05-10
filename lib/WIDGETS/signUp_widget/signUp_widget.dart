@@ -101,10 +101,13 @@ Widget form(BuildContext context) {
           // SOCIAL
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.g_mobiledata, size: 30),
-              SizedBox(width: 20),
-              Icon(Icons.facebook, size: 24),
+            children: [
+                  Provider.of<AuthProviders>(context).isLoading? Center(child: CircularProgressIndicator(),) :InkWell(
+                    onTap: (){
+                      Provider.of<AuthProviders>(context,listen: false).googleSignInFunction(context);
+                    },
+                      child: const Icon(Icons.g_mobiledata, size: 30)
+                   )
             ],
           ),
 

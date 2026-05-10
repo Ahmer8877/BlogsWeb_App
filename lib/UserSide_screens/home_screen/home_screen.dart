@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  //initialize FirebaseFirestore
   final FirebaseFirestore db = FirebaseFirestore.instance;
+
+  //initialize whatsApp Url
+  Uri contactUrl=Uri.parse('https://wa.me/qr/ECJDRCYFI53AA1');
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
       //Floating action button
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor:  Colors.greenAccent,
           onPressed: (){
-            context.go('/AiChatBot');
-          },child:Icon(Icons.message_outlined)
+            context.goNamed('aiChatBot');
+          },child:Icon(Icons.message_outlined,color: Colors.white,)
       ),
       
       body: SafeArea(
@@ -135,8 +141,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         //contact us button
                         PopupMenuItem(
-                          onTap: (){},
+                          onTap: ()async{
+                           await launchUrl(contactUrl);
+                          },
                             child: Row(children: [Icon(Icons.call),Text('Contact Us')],)
+                        ),
+                        PopupMenuItem(
+                          onTap: (){},
+                            child: Text('About v1.0')
                         )
                       ]
                   ),
