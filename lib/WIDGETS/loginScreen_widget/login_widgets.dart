@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+// controllers
 final email=TextEditingController();
 final password=TextEditingController();
+//form key
 final formKey=GlobalKey<FormState>();
 
-// ================= LEFT FORM =================
+// LEFT FORM
 
 Widget loginForm(BuildContext context) {
   return Padding(
@@ -124,7 +126,7 @@ Widget loginForm(BuildContext context) {
   );
 }
 
-// ================= INPUT FIELD =================
+// INPUT FIELD widget
 Widget inputField({
   required String hint,
   required IconData icon,
@@ -156,7 +158,7 @@ Widget inputField({
   );
 }
 
-// ================= RIGHT IMAGE =================
+// RIGHT IMAGE widget
 Widget rightImage() {
   return Padding(
     padding: const EdgeInsets.all(40),

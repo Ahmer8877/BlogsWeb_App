@@ -12,19 +12,22 @@ class AddBlogScreen extends StatefulWidget {
 
 class _AddBlogScreenState extends State<AddBlogScreen> {
 
+  //All controllers
   final title = TextEditingController();
   final des = TextEditingController();
   final author = TextEditingController();
+  //form key
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    //main root of screen
     return Scaffold(
       backgroundColor: const Color(0xFFF4ECE6),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // 🔥 responsive width
+            // responsive width
             double maxWidth = constraints.maxWidth > 900 ? 800 : double
                 .infinity;
 
@@ -38,7 +41,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      // 🔥 TITLE
+                      // TITLE
                       RichText(
                         text: const TextSpan(
                           children: [
@@ -72,14 +75,14 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                         ),
                       ),
 
-                      // 🔥 TITLE FIELD
+                      //  TITLE FIELD
                       inputFieldForAddBlog(
                         controller: title,
                         hint: "Post title...",
                       ),
                       const SizedBox(height: 20),
 
-                      // 🔥 CONTENT FIELD
+                      //  CONTENT FIELD
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -99,7 +102,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
                       const SizedBox(height: 30),
 
-                      // 🔥 BUTTON
+                      // BUTTON
                       Align(
                         alignment: Alignment.centerRight,
                         child: Consumer<AuthProviders>(

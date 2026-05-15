@@ -14,11 +14,14 @@ class MyBlogsScreen extends StatefulWidget {
 
 class _MyBlogsScreenState extends State<MyBlogsScreen> {
 
+  //initialize firebase firestore databse
   FirebaseFirestore db=FirebaseFirestore.instance;
+  //initialize firebase auth
   FirebaseAuth auth=FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
+    //main root of screen
     return Scaffold(
         backgroundColor: const Color(0xFFF4ECE6),
 
@@ -50,6 +53,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
 
                   SizedBox(width: 8),
 
+                  //App name
                   Text(
                     "Mir_Blogs",
 
@@ -80,6 +84,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                     ),
                   ),
 
+                  //set constraints
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -142,6 +147,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
 
                                 final blog = blogs[index];
 
+                                //MyBlogWid widgets
                                 return MyBlogWid(
                                   blog: blog,
                                 );

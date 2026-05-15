@@ -1,3 +1,5 @@
+//user auth model
+
 class UserModel {
 
   String? id;
@@ -5,6 +7,7 @@ class UserModel {
 
   UserModel(this.id,this.name,this.email,this.password);
 
+  //factory cons..
   factory UserModel.fromMap(map) => UserModel(
       map['id'],
       map['name'],
@@ -12,6 +15,7 @@ class UserModel {
       map['password']
   );
 
+  //Map...
   Map<String ,dynamic> toMap()=>{
     'id':id,
     'name':name,

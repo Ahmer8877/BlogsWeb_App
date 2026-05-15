@@ -33,6 +33,7 @@ class BlogDetailScreen extends StatelessWidget {
 
           return Center(
             child: Container(
+              // set constraints
               constraints: const BoxConstraints(
                 maxWidth: 1100,
               ),
@@ -87,6 +88,7 @@ class BlogDetailScreen extends StatelessWidget {
                             BorderRadius.circular(30),
                           ),
 
+                          //calender icon with date wrap with row
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
 
@@ -159,6 +161,8 @@ class BlogDetailScreen extends StatelessWidget {
 
                           child: Padding(
                             padding: const EdgeInsets.all(20),
+
+                            //person icon with author name wrap with row
 
                             child: Row(
                               children: [

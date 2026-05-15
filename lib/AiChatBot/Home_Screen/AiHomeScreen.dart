@@ -19,17 +19,20 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
   @override
   Widget build(BuildContext context) {
 
+    //get chat provider
     final provider = Provider.of<ChatProvider>(context);
 
+    //main root of screen
     return Scaffold(
 
       backgroundColor: const Color(0xFFF8F5EF),
 
+      //body start with safe area
       body: SafeArea(
         child: Stack(
           children: [
 
-            // ================= BACKGROUND =================
+            // BACKGROUND
 
             Positioned(
               top: -100,
@@ -51,7 +54,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
               ),
             ),
 
-            // ================= MAIN CHAT =================
+            // MAIN CHAT
 
             Column(
               children: [
@@ -90,6 +93,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
 
                         children: [
 
+                          //Text with gemini version name
                           Text(
                             "AI Assistant (Gemini-3-Flash)",
 
@@ -101,6 +105,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
 
                           SizedBox(height: 3),
 
+                          //status text
                           Text(
                             "Online",
 
@@ -114,6 +119,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
                   ),
                 ),
 
+                //current day text
                 const Text(
                   "Today",
 
@@ -124,7 +130,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
 
                 const SizedBox(height: 10),
 
-                // ================= MESSAGES =================
+                //  MESSAGES
 
                 Expanded(
                   child: LayoutBuilder(
@@ -142,7 +148,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
 
                         itemBuilder: (context, index) {
 
-                          // ================= LOADING =================
+                          // LOADING
 
                           if (provider.isLoading &&
                               index == provider.messages.length) {
@@ -176,6 +182,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
                                   ],
                                 ),
 
+                                //AI response before msg loading
                                 child: SizedBox(
                                   height: 20,
                                   width: 20,
@@ -186,7 +193,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
                             );
                           }
 
-                          // ================= MESSAGE =================
+                          // MESSAGE
 
                           final msg = provider.messages[index];
 
@@ -243,6 +250,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
                                 ],
                               ),
 
+                              //user text msg
                               child: Text(
                                 msg.text,
 
@@ -262,7 +270,7 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
                   ),
                 ),
 
-                // ================= INPUT FIELD =================
+                // INPUT FIELD
 
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -322,12 +330,9 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
 
                         onTap: () {
 
-                          if (msgController.text
-                              .trim()
-                              .isNotEmpty) {
+                          if (msgController.text.trim().isNotEmpty) {
 
-                            provider.sendMessage(
-                              msgController.text.trim(),
+                            provider.sendMessage(msgController.text.trim(),
                             );
 
                             msgController.clear();
@@ -363,7 +368,10 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
     );
   }
 
-  // ================= BLUR CIRCLE =================
+  //Extra widgets
+
+
+  // BLUR CIRCLE
 
   Widget _blurCircle({
     required double size,

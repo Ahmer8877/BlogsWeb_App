@@ -11,23 +11,33 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  //initialize firebase auth
   FirebaseAuth auth=FirebaseAuth.instance;
 
+  //init state
   @override
   void initState() {
+    nextScreen();
     super.initState();
-     Future.delayed(const Duration(seconds: 3), () {
+  }
+
+  //next screen func..
+  void nextScreen()async{
+    Future.delayed(const Duration(seconds: 3), () {
       if(!mounted){
         return;
       }
       context.go(auth.currentUser==null? '/main' : '/home');
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    //amin root of screen
     return Scaffold(
       backgroundColor: const Color(0xFFF4ECE6),
 
+      //body
       body: Center(child: CircularProgressIndicator(),),
     );
   }

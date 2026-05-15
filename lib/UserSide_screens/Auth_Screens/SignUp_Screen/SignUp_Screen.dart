@@ -7,6 +7,8 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    //main root of screen
     return Scaffold(
 
       backgroundColor: const Color(0xFFF4ECE6),
@@ -29,7 +31,9 @@ class SignupScreen extends StatelessWidget {
               )
                   : Row(
                 children: [
+                  // form widget wrap with expanded
                   Expanded(child: form(context)),
+                  // rightImage widget wrap with expanded
                   Expanded(child: rightImage()),
                 ],
               ),

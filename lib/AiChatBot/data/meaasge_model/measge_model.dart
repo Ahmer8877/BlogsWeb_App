@@ -1,3 +1,5 @@
+
+//simple msg model for user and AI response
 class MessageModel {
 
   String text;

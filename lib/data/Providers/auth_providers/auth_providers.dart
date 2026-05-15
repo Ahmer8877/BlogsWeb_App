@@ -9,11 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+
+//All auth providers class
+
 class AuthProviders with ChangeNotifier{
 
+  //firebase auth  initialize
 FirebaseAuth auth=FirebaseAuth.instance;
+//firebase Firestore  initialize
 FirebaseFirestore db=FirebaseFirestore.instance;
+  //firebase GoogleAuth  initialize
 GoogleSignIn googleSignIn=GoogleSignIn.instance;
+//loading vari..
 bool isLoading=false;
 
 //signUp function
@@ -24,13 +31,15 @@ void signUpFunction(String name,String email,String password,BuildContext contex
     isLoading=true;
     safeNotify();
     final result=await auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
-    UserModel user=UserModel(result.user?.uid, name, email,password);
 
+    //firestore database
+    UserModel user=UserModel(result.user?.uid, name, email,password);
     await db.collection('BlogUsers').doc(result.user?.uid).set(user.toMap());
+
+    //next screen permute
     if(context.mounted){
       WidgetsBinding.instance.addPostFrameCallback((_){
         context.go('/login');
-
       });
 
     }
@@ -54,8 +63,11 @@ void loginFunction(String email,String password,BuildContext context)async{
   try{
     isLoading=true;
     safeNotify();
+
+    //firebase sign in
     await auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
 
+    //next screen permute
     if(context.mounted){
       WidgetsBinding.instance.addPostFrameCallback((_){
         context.go('/home');
@@ -78,13 +90,16 @@ void loginFunction(String email,String password,BuildContext context)async{
 
 Future<void> logOut(BuildContext context)async{
 
+  //firebase logout
   await auth.signOut();
+
+  //next screen permute
   if(context.mounted){
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>MainScreen()), (value)=>false);
   }
 }
 
-//forget pasword function
+//forget password function
 
   Future<void> forget(String email)async{
 
@@ -92,6 +107,7 @@ Future<void> logOut(BuildContext context)async{
     isLoading=true;
     safeNotify();
 
+    //firebase through reset password
     await auth.sendPasswordResetEmail(email: email.trim());
 
     showSuccessMsg('Check your email Now');
@@ -106,7 +122,7 @@ Future<void> logOut(BuildContext context)async{
   }
   }
 
-//add blog provider
+//Add blog Func..
 
   Future<void> addBlog({
     required String title,
@@ -115,11 +131,13 @@ Future<void> logOut(BuildContext context)async{
     required BuildContext context,
   }) async {
 
+  //If Empty
     if (title.trim().isEmpty || description.trim().isEmpty || author.trim().isEmpty) {
       showFailureMsg("Title, Author and Description required");
       return;
     }
 
+    //for current user
     final user = auth.currentUser;
 
     if (user == null) {
@@ -127,13 +145,16 @@ Future<void> logOut(BuildContext context)async{
       return;
     }
 
+    //get date time
     final now = DateTime.now();
+    //get id with millisecondsSinceEpoch
     final id = now.millisecondsSinceEpoch.toString();
 
     try {
       isLoading = true;
       safeNotify();
 
+      //add blog Model
       final blog = BlogModel(
         id,
         user.uid,
@@ -144,6 +165,7 @@ Future<void> logOut(BuildContext context)async{
         author.trim()
       );
 
+      //firestore database
       await db.collection('Blogs').doc(id).set(blog.toMap());
 
       //  Success message

@@ -1,3 +1,5 @@
+//Blog All data model
+
 class BlogModel {
 
   String id ,userId,title,des,status,author;
@@ -5,6 +7,7 @@ class BlogModel {
 
   BlogModel(this.id,this.userId,this.title,this.des,this.status,this.createAt,this.author);
 
+  //factory contractor
   factory BlogModel.fromMap(map)=> BlogModel(
       map['id'],
       map['userId'],
@@ -15,6 +18,7 @@ class BlogModel {
       map['author'] ?? 'Unknown author'
   );
 
+  //Concert data to map
   Map<String,dynamic> toMap()=>{
 
     'id':id,

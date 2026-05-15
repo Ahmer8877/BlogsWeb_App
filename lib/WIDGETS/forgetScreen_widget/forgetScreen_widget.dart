@@ -12,11 +12,13 @@ class ForgetForm extends StatefulWidget {
 
 class _ForgetFormState extends State<ForgetForm> {
 
-  final TextEditingController emailController =
-  TextEditingController();
+  //email controller
+  final emailController = TextEditingController();
 
+  //form key
   final formKey = GlobalKey<FormState>();
 
+  //dispose func..
   @override
   void dispose() {
     emailController.dispose();
@@ -145,6 +147,8 @@ class _ForgetFormState extends State<ForgetForm> {
     );
   }
 }
+
+//RightImage widget
 class RightImage extends StatelessWidget {
   const RightImage({super.key});
 
@@ -171,6 +175,7 @@ class RightImage extends StatelessWidget {
             ),
           ),
 
+          //random assets image
           Image.asset(
             "assets/images/login.jpg",
             height: 300,

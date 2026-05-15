@@ -9,14 +9,16 @@ import 'package:blog_with_ai_chatbot/UserSide_screens/splash_screen/splash_Scree
 import 'package:go_router/go_router.dart';
 import '../UserSide_screens/myBlogs_screen/myBlogs_Screen.dart';
 
+//define all all routes class
 class GoRoutes {
 
-
+//go routers func..
  static GoRouter routes() => GoRouter(
       routes: [
         //splash screen route
         GoRoute(path: '/',builder: (context,state)=> SplashScreen()
         ),
+        //main screen route
         GoRoute(path: '/main',builder: (context,state)=> MainScreen()),
         GoRoute(path: '/login',builder: (context,state)=> LoginScreen(),
             // login routes
@@ -24,8 +26,10 @@ class GoRoutes {
           GoRoute(path: '/forget',name: 'forget',builder: (context,state)=> ForgetScreen()),
         ]),
         GoRoute(path: '/signUp',builder: (context,state)=> SignupScreen()),
+        //home screen route
         GoRoute(path: '/home',builder: (context,state)=> HomeScreen(),
             routes: [
+              //home screen routes
               GoRoute(path: '/addBlog',name: 'addBlog',builder: (context,state)=> AddBlogScreen()),
               GoRoute(path: '/myBlog',name: 'myBlog',builder: (context,state)=> MyBlogsScreen()),
               GoRoute(path: '/aiChatBot',name: 'aiChatBot',builder: (context,state)=> AiHomeScreen()),

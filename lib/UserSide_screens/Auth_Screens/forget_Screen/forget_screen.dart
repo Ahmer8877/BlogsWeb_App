@@ -31,10 +31,12 @@ class ForgetScreen extends StatelessWidget {
                 child: Column(
                   children: const [
 
+                    //ForgetForm widget
                     ForgetForm(),
 
                     SizedBox(height: 30),
 
+                    //RightImage widget
                     RightImage(),
                   ],
                 ),

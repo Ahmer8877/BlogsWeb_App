@@ -1,27 +1,24 @@
 import 'package:blog_with_ai_chatbot/AiChatBot/data/provider/chat_provider.dart';
 import 'package:blog_with_ai_chatbot/data/Providers/auth_providers/auth_providers.dart';
-import 'package:blog_with_ai_chatbot/data/Providers/mainLoading_provider/main_Loading_provider.dart';
 import 'package:blog_with_ai_chatbot/utils/go_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
-
 import 'firebase_options.dart';
 
+//scaffoldMessengerKey for global use
 final scaffoldMessengerKey=GlobalKey<ScaffoldMessengerState>();
-final navigatorKey=GlobalKey<NavigatorState>();
 
-
+//main func.
 void main() async{
-  await dotenv.load(fileName:".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  //without hash url strategy
   usePathUrlStrategy();
+
   runApp(const BlogWeb());
 }
 
@@ -30,12 +27,14 @@ class BlogWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //multi providers
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context)=> MainLoadingProvider()),
           ChangeNotifierProvider(create: (context)=> AuthProviders()),
           ChangeNotifierProvider(create: (context)=> ChatProvider()),
         ],
+
+      // Material app with routers
       child:  MaterialApp.router(
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: scaffoldMessengerKey,

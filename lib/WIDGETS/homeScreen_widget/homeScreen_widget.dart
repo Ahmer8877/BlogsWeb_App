@@ -3,8 +3,10 @@ import 'package:blog_with_ai_chatbot/data/model/Blog_mddel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+//home screen widget
 class BlogCard extends StatelessWidget {
 
+  //Blog model
   final BlogModel blog;
 
   const BlogCard({
@@ -16,7 +18,6 @@ class BlogCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     //formate date
-
     final formattedDate = DateFormat('dd MMM yyyy').format(blog.createAt);
 
     return InkWell(

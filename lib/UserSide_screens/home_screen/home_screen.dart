@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //initialize FirebaseFirestore
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  //initialize whatsApp Url
+  //initialize whatsApp Url for me contact support
   Uri contactUrl=Uri.parse('https://wa.me/qr/ECJDRCYFI53AA1');
 
   @override
@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisCount = 2;
     }
 
+    //main root of screen
     return Scaffold(
 
       backgroundColor: const Color(0xFFF4ECE6),
@@ -52,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
             context.goNamed('aiChatBot');
           },child:Icon(Icons.message_outlined,color: Colors.white,)
       ),
-      
+
+      //body with safe area
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -81,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       SizedBox(width: 8),
 
+                      //App name
                       Text(
                         "Mir_Blogs",
 
@@ -102,26 +105,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       children: [
 
-                        // MY BLOGS button
-                        ElevatedButton(
+                        // MY BLOGS button with list icon
+                        TextButton(
                           onPressed: () {
                             context.goNamed('myBlog');
                           },
-
-                          child: const Text(
-                            "My Blogs",
-                          ),
+                          child: Icon(Icons.list_alt,size: 30,)
                         ),
 
                         // ADD BLOG button
-                        ElevatedButton(
+                        TextButton(
                           onPressed: () {
                             context.goNamed('addBlog');
                           },
 
-                          child: const Text(
-                            "+ Write Post",
-                          ),
+                          child:Icon(Icons.add,size: 30,)
                         ),
                       ],
                     ),
@@ -139,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 icon: Icon(Icons.logout)
                             )
                         ),
-                        //contact us button
+                        //contact us button(whatsApp)
                         PopupMenuItem(
                           onTap: ()async{
                            await launchUrl(contactUrl);
@@ -178,13 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Flexible(
                 child: StreamBuilder<QuerySnapshot>(
 
-                  stream: db.collection('Blogs').where(
-                    'status',
-                    isEqualTo: 'approved',
-                  )
-                      .orderBy(
-                    'createAt',
-                    descending: true,
+                  stream: db.collection('Blogs').where('status', isEqualTo: 'approved',
+                  ).orderBy('createAt', descending: true,
                   )
                       .snapshots(),
 
@@ -234,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       itemBuilder: (context, index) {
 
+                        // BlogCard widget
                         return BlogCard(
                           blog: blogs[index],
                         );
