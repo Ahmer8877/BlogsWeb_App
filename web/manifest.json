@@ -1,6 +1,6 @@
 {
     "name": "Mir_Blogs",
-    "short_name": "blog_with_ai_chatbot",
+    "short_name": "Mir_Blogs",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

@@ -114,7 +114,7 @@ class MyBlogWid extends StatelessWidget {
                     blog.status=='rejected'? Colors.red: Colors.green,
                     shape: BoxShape.rectangle
                 ),
-                child: Text(blog.status.toUpperCase()),
+                child: Center(child: Text(blog.status.toUpperCase())),
               ),
             )
           ],

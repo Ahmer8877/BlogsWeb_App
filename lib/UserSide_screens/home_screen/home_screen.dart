@@ -48,196 +48,191 @@ class _HomeScreenState extends State<HomeScreen> {
       //Floating action button
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor:  Colors.greenAccent,
+        backgroundColor:  Colors.green,
           onPressed: (){
             context.goNamed('aiChatBot');
           },child:Icon(Icons.message_outlined,color: Colors.white,)
       ),
 
-      //body with safe area
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 30,
-            vertical: 20,
+      //App Bar
+
+      appBar: AppBar(
+
+        backgroundColor: const Color(0xFFF4ECE6),
+
+        // LOGO
+        title:
+          Row(
+            children: const [
+
+            Icon(
+              Icons.auto_awesome,
+              color: Colors.greenAccent,
+            ),
+
+            SizedBox(width: 8),
+
+            //App name
+            Text(
+              "Mir_Blogs",
+
+              style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+
+        // Actions
+
+        actions: [
+
+          // MY BLOGS button with list icon
+          TextButton(
+              onPressed: () {
+                context.goNamed('myBlog');
+              },
+              child: Icon(Icons.list_alt,size: 30,color: Colors.green,)
           ),
 
-          child: Column(
-            children: [
+          // ADD BLOG button
+          TextButton(
+              onPressed: () {
+                context.goNamed('addBlog');
+              },
 
-              //TOP BAR
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+              child:Icon(Icons.add,size: 30,color: Colors.green,)
+          ),
 
-                children: [
+          //PopUp Button
+          PopupMenuButton(
+            iconColor: Colors.green,
 
-                  // LOGO
-                  Row(
-                    children: const [
+              itemBuilder: (context)=>[
 
-                      Icon(
-                        Icons.auto_awesome,
-                        color: Colors.greenAccent,
-                      ),
+                //logOut Button
+                PopupMenuItem(
+                    child: TextButton.icon(
+                        onPressed: (){
+                          Provider.of<AuthProviders>(context,listen: false).logOut(context);
+                        },
+                        label: Text('SignOut'),
+                        icon: Icon(Icons.logout)
+                    )
+                ),
+                //contact us button(whatsApp)
+                PopupMenuItem(
+                    onTap: ()async{
+                      await launchUrl(contactUrl);
+                    },
+                    child: Row(children: [Icon(Icons.call),Text('Contact Us')],)
+                ),
+                PopupMenuItem(
+                    onTap: (){},
+                    child: Text('About v1.0')
+                )
+              ]
+          ),
+        ],
+      ),
 
-                      SizedBox(width: 8),
+      //body with
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 20,
+        ),
 
-                      //App name
-                      Text(
-                        "Mir_Blogs",
+        child: Column(
+          children: [
+
+            const SizedBox(height: 10),
+
+            // TITLE
+
+            const Align(
+              alignment: Alignment.centerLeft,
+
+              child: Text(
+                "Latest Articles",
+
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            // BLOGS
+            Flexible(
+              child: StreamBuilder<QuerySnapshot>(
+
+                stream: db.collection('Blogs').where('status', isEqualTo: 'approved',
+                ).orderBy('createAt', descending: true,
+                )
+                    .snapshots(),
+
+                builder: (context, snapshot) {
+
+                  // LOADING
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const Center(child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  // EMPTY
+                  if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+
+                    return const Center(
+                      child: Text(
+                        "No Blogs Found",
 
                         style: TextStyle(
-                          color: Colors.greenAccent,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
                         ),
                       ),
-                    ],
-                  ),
-
-                  Spacer(),
-
-                  Expanded(
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-
-                      children: [
-
-                        // MY BLOGS button with list icon
-                        TextButton(
-                          onPressed: () {
-                            context.goNamed('myBlog');
-                          },
-                          child: Icon(Icons.list_alt,size: 30,)
-                        ),
-
-                        // ADD BLOG button
-                        TextButton(
-                          onPressed: () {
-                            context.goNamed('addBlog');
-                          },
-
-                          child:Icon(Icons.add,size: 30,)
-                        ),
-                      ],
-                    ),
-                  ),
-                  PopupMenuButton(
-                      itemBuilder: (context)=>[
-
-                        //logOut Button
-                        PopupMenuItem(
-                            child: TextButton.icon(
-                                onPressed: (){
-                                  Provider.of<AuthProviders>(context,listen: false).logOut(context);
-                                },
-                                label: Text('SignOut'),
-                                icon: Icon(Icons.logout)
-                            )
-                        ),
-                        //contact us button(whatsApp)
-                        PopupMenuItem(
-                          onTap: ()async{
-                           await launchUrl(contactUrl);
-                          },
-                            child: Row(children: [Icon(Icons.call),Text('Contact Us')],)
-                        ),
-                        PopupMenuItem(
-                          onTap: (){},
-                            child: Text('About v1.0')
-                        )
-                      ]
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 35),
-
-              // TITLE
-              const Align(
-                alignment: Alignment.centerLeft,
-
-                child: Text(
-                  "Latest Articles",
-
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // BLOGS
-              Flexible(
-                child: StreamBuilder<QuerySnapshot>(
-
-                  stream: db.collection('Blogs').where('status', isEqualTo: 'approved',
-                  ).orderBy('createAt', descending: true,
-                  )
-                      .snapshots(),
-
-                  builder: (context, snapshot) {
-
-                    // LOADING
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return const Center(child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    // EMPTY
-                    if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-
-                      return const Center(
-                        child: Text(
-                          "No Blogs Found",
-
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      );
-                    }
-
-                    // DATA
-                    final blogs = snapshot.data!.docs
-                        .map((e) => BlogModel.fromMap(
-                      e.data() as Map<String,dynamic>,
-                    ))
-                        .toList();
-
-                    return GridView.builder(
-
-                      itemCount: blogs.length,
-
-                      gridDelegate:
-                      SliverGridDelegateWithFixedCrossAxisCount(
-
-                        crossAxisCount: crossAxisCount,
-
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-
-                        childAspectRatio: 1.1,
-                      ),
-
-                      itemBuilder: (context, index) {
-
-                        // BlogCard widget
-                        return BlogCard(
-                          blog: blogs[index],
-                        );
-                      },
                     );
-                  },
-                ),
+                  }
+
+                  // DATA
+                  final blogs = snapshot.data!.docs
+                      .map((e) => BlogModel.fromMap(
+                    e.data() as Map<String,dynamic>,
+                  ))
+                      .toList();
+
+                  return GridView.builder(
+
+                    itemCount: blogs.length,
+
+                    gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+
+                      crossAxisCount: crossAxisCount,
+
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+
+                      childAspectRatio: 1.1,
+                    ),
+
+                    itemBuilder: (context, index) {
+
+                      // BlogCard widget
+                      return BlogCard(
+                        blog: blogs[index],
+                      );
+                    },
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
