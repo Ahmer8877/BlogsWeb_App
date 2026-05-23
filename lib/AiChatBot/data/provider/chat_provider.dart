@@ -38,7 +38,7 @@ class ChatProvider with ChangeNotifier {
 
           'Content-Type': 'application/json',
 
-          'x-goog-api-key': 'AIzaSyC1DzRP0pOP9qTXbukaAcFLQrRNSRL3KCg',
+          'x-goog-api-key': 'AIzaSyBKYhhg8b6-kShOqfJfY6Au2b9rkMZwlcs',
         },
 
         //api data content

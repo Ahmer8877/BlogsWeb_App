@@ -43,8 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     //main root of screen
     return Scaffold(
 
-      backgroundColor: const Color(0xFFF4ECE6),
-
       //Floating action button
 
       floatingActionButton: FloatingActionButton(
@@ -139,101 +137,113 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       //body with
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 20,
-        ),
+      body: Stack(
+        children: [
 
-        child: Column(
-          children: [
-
-            const SizedBox(height: 10),
-
-            // TITLE
-
-            const Align(
-              alignment: Alignment.centerLeft,
-
-              child: Text(
-                "Latest Articles",
-
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
+          // ── Background Image ──
+          SizedBox.expand(
+            child: Image.asset(
+              'assets/images/background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 20,
             ),
 
-            const SizedBox(height: 25),
+            child: Column(
+              children: [
 
-            // BLOGS
-            Flexible(
-              child: StreamBuilder<QuerySnapshot>(
+                const SizedBox(height: 10),
 
-                stream: db.collection('Blogs').where('status', isEqualTo: 'approved',
-                ).orderBy('createAt', descending: true,
-                )
-                    .snapshots(),
+                // TITLE
 
-                builder: (context, snapshot) {
+                const Align(
+                  alignment: Alignment.centerLeft,
 
-                  // LOADING
-                  if(snapshot.connectionState == ConnectionState.waiting){
-                    return const Center(child: CircularProgressIndicator(),
-                    );
-                  }
+                  child: Text(
+                    "Latest Articles",
 
-                  // EMPTY
-                  if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-
-                    return const Center(
-                      child: Text(
-                        "No Blogs Found",
-
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    );
-                  }
-
-                  // DATA
-                  final blogs = snapshot.data!.docs
-                      .map((e) => BlogModel.fromMap(
-                    e.data() as Map<String,dynamic>,
-                  ))
-                      .toList();
-
-                  return GridView.builder(
-
-                    itemCount: blogs.length,
-
-                    gridDelegate:
-                    SliverGridDelegateWithFixedCrossAxisCount(
-
-                      crossAxisCount: crossAxisCount,
-
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-
-                      childAspectRatio: 1.1,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
+                  ),
+                ),
 
-                    itemBuilder: (context, index) {
+                const SizedBox(height: 25),
 
-                      // BlogCard widget
-                      return BlogCard(
-                        blog: blogs[index],
+                // BLOGS
+                Flexible(
+                  child: StreamBuilder<QuerySnapshot>(
+
+                    stream: db.collection('Blogs').where('status', isEqualTo: 'approved',
+                    ).orderBy('createAt', descending: true,
+                    )
+                        .snapshots(),
+
+                    builder: (context, snapshot) {
+
+                      // LOADING
+                      if(snapshot.connectionState == ConnectionState.waiting){
+                        return const Center(child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      // EMPTY
+                      if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+
+                        return const Center(
+                          child: Text(
+                            "No Blogs Found",
+
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      }
+
+                      // DATA
+                      final blogs = snapshot.data!.docs
+                          .map((e) => BlogModel.fromMap(
+                        e.data() as Map<String,dynamic>,
+                      ))
+                          .toList();
+
+                      return GridView.builder(
+
+                        itemCount: blogs.length,
+
+                        gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+
+                          crossAxisCount: crossAxisCount,
+
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+
+                          childAspectRatio: 1.1,
+                        ),
+
+                        itemBuilder: (context, index) {
+
+                          // BlogCard widget
+                          return BlogCard(
+                            blog: blogs[index],
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

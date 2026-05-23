@@ -23,144 +23,155 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
   Widget build(BuildContext context) {
     //main root of screen
     return Scaffold(
-        backgroundColor: const Color(0xFFF4ECE6),
 
-        body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 20,
+        body: Stack(
+          children: [
+
+            // ── Background Image ──
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/background.png',
+                fit: BoxFit.cover,
               ),
+            ),
+            SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 20,
+                  ),
 
-              child: Column(
-                children: [
-
-                  //TOP BAR
-                  Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-
+                  child: Column(
                     children: [
 
-                  // LOGO
-                  Row(
-                  children: const [
+                      //TOP BAR
+                      Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
 
-                  Icon(
-                  Icons.auto_awesome,
-                    color: Colors.greenAccent,
-                  ),
+                        children: [
 
-                  SizedBox(width: 8),
+                      // LOGO
+                      Row(
+                      children: const [
 
-                  //App name
-                  Text(
-                    "Mir_Blogs",
-
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-                    ]
-              ),
-                  const SizedBox(height: 35),
-
-                  // TITLE
-                  const Align(
-                    alignment: Alignment.centerLeft,
-
-                    child: Text(
-                      "My Articles",
-
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                      Icon(
+                      Icons.auto_awesome,
+                        color: Colors.greenAccent,
                       ),
-                    ),
+
+                      SizedBox(width: 8),
+
+                      //App name
+                      Text(
+                        "Mir_Blogs",
+
+                        style: TextStyle(
+                          color: Colors.greenAccent,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
+                        ]
+                  ),
+                      const SizedBox(height: 35),
 
-                  //set constraints
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
+                      // TITLE
+                      const Align(
+                        alignment: Alignment.centerLeft,
 
-                        int crossAxisCount = 1;
+                        child: Text(
+                          "My Articles",
 
-                        if (constraints.maxWidth > 1200) {
-                          crossAxisCount = 4;
-                        } else if (constraints.maxWidth > 900) {
-                          crossAxisCount = 3;
-                        } else if (constraints.maxWidth > 600) {
-                          crossAxisCount = 2;
-                        } else {
-                          crossAxisCount = 1;
-                        }
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
 
-                        return StreamBuilder(
-                          stream: db.collection('Blogs').where('userId',isEqualTo: auth.currentUser?.uid).snapshots(),
-                          builder: (context,snapshot) {
+                      //set constraints
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
 
-                            // LOADING
-                            if(snapshot.connectionState == ConnectionState.waiting){
-                              return const Center(child: CircularProgressIndicator(),
-                              );
+                            int crossAxisCount = 1;
+
+                            if (constraints.maxWidth > 1200) {
+                              crossAxisCount = 4;
+                            } else if (constraints.maxWidth > 900) {
+                              crossAxisCount = 3;
+                            } else if (constraints.maxWidth > 600) {
+                              crossAxisCount = 2;
+                            } else {
+                              crossAxisCount = 1;
                             }
 
-                            // EMPTY
-                            if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                            return StreamBuilder(
+                              stream: db.collection('Blogs').where('userId',isEqualTo: auth.currentUser?.uid).snapshots(),
+                              builder: (context,snapshot) {
 
-                              return const Center(
-                                child: Text(
-                                  "No Blogs Found",
+                                // LOADING
+                                if(snapshot.connectionState == ConnectionState.waiting){
+                                  return const Center(child: CircularProgressIndicator(),
+                                  );
+                                }
 
-                                  style: TextStyle(
-                                    fontSize: 18,
+                                // EMPTY
+                                if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+
+                                  return const Center(
+                                    child: Text(
+                                      "No Blogs Found",
+
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                // DATA
+                                final blogs = snapshot.data!.docs
+                                    .map((e) => BlogModel.fromMap(
+                                  e.data(),
+                                ))
+                                    .toList();
+                                return GridView.builder(
+                                  padding: const EdgeInsets.all(20),
+
+                                  itemCount: blogs.length,
+
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20,
+                                    childAspectRatio: 1.2,
                                   ),
-                                ),
-                              );
-                            }
 
-                            // DATA
-                            final blogs = snapshot.data!.docs
-                                .map((e) => BlogModel.fromMap(
-                              e.data(),
-                            ))
-                                .toList();
-                            return GridView.builder(
-                              padding: const EdgeInsets.all(20),
+                                  itemBuilder: (context, index) {
 
-                              itemCount: blogs.length,
+                                    final blog = blogs[index];
 
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 1.2,
-                              ),
-
-                              itemBuilder: (context, index) {
-
-                                final blog = blogs[index];
-
-                                //MyBlogWid widgets
-                                return MyBlogWid(
-                                  blog: blog,
+                                    //MyBlogWid widgets
+                                    return MyBlogWid(
+                                      blog: blog,
+                                    );
+                                  },
                                 );
-                              },
+                              }
                             );
-                          }
-                        );
-                      },
-                    ),
+                          },
+                        ),
+                      )
+                    ]
                   )
-                ]
-              )
-            )
+                )
+            ),
+          ],
         )
     );
   }

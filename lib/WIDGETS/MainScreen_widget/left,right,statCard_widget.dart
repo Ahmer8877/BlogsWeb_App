@@ -18,7 +18,7 @@ class leftContent extends StatelessWidget {
             ),
             child: const Text(
               "Blogs Web App",
-              style: TextStyle(color: Colors.greenAccent),
+              style: TextStyle(color: Colors.orange,fontWeight: FontWeight.bold),
             ),
           ),
 

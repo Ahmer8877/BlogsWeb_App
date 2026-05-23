@@ -25,12 +25,19 @@ class _AiHomeScreenState extends State<AiHomeScreen> {
     //main root of screen
     return Scaffold(
 
-      backgroundColor: const Color(0xFFF8F5EF),
 
       //body start with safe area
       body: SafeArea(
         child: Stack(
           children: [
+
+            // ── Background Image ──
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/background.png',
+                fit: BoxFit.cover,
+              ),
+            ),
 
             // BACKGROUND
 
