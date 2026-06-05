@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:blog_with_ai_chatbot/AiChatBot/data/provider/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
